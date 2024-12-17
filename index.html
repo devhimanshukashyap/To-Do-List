@@ -12,8 +12,8 @@
         :root {
             --background-color: black;
             --color: white;
-            --shadow: rgba(255, 255, 255, 0.1);
-            --border: #313131;
+            --shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+            --border: #939393;
         }
 
         * {
@@ -80,12 +80,12 @@
 
         /* Task list */
         #task-list {
-            list-style:480px;
+            list-style: 480px;
             max-height: px;
             overflow-y: auto;
         }
 
-        #task-list::-webkit-scrollbar{
+        #task-list::-webkit-scrollbar {
             display: none;
         }
 
@@ -114,9 +114,51 @@
             background-color: #a71d2a;
         }
 
-        #task-list li.checked{
+        #task-list li.checked {
             color: red;
             text-decoration: line-through;
+        }
+
+        /* Dark Theme ---------------------------------------------------- */
+
+        body.dark {
+            background-color: var(--background-color);
+        }
+
+        #task-list li.dark {
+            background-color: rgb(75, 75, 75);
+            color: whitesmoke;
+            border: 1px solid var(--border);
+        }
+
+        .input-section button.dark {
+            color: var(--color);
+        }
+
+        .input-section input.dark {
+            border: 1px solid var(--border);
+        }
+
+        .todo-container.dark {
+            background-color: rgb(63, 63, 63);
+            box-shadow: 0 4px 6px rgba(138, 138, 138, 0.1);
+            border: rgb(241, 241, 241);
+            color: whitesmoke;
+        }
+
+        .todo-container h1.dark {
+            color: rgb(227, 227, 227);
+        }
+
+        .theme {
+            border: none;
+            padding: 5px;
+            background-color: transparent;
+            font-size: 20px;
+        }
+
+        .theme:hover {
+            background-color: #33333339;
         }
     </style>
 </head>
@@ -126,24 +168,24 @@
 
 <body>
     <div class="todo-container">
+        <button onclick="changeTheme()" class="theme"><i class="fa-solid fa-moon"></i></button>
         <h1>My To-Do List</h1>
         <div class="input-section">
             <input type="text" id="task-input" placeholder="Enter a new task...">
             <button onclick="addTask()">Add Task</button>
         </div>
-        <ul id="task-list"> 
-            
+        <ul id="task-list">
+
         </ul>
     </div>
     <script>
         const input = document.getElementById('task-input');
         const taskList = document.getElementById('task-list');
-        var dltBtn = document.getElementsByClassName('delete-btn');
 
-        function addTask(){
-            if(input.value === ""){
-                    alert("Enter task first")
-            }else{
+        function addTask() {
+            if (input.value === "") {
+                alert("Enter task first")
+            } else {
                 let task = document.createElement("li")
                 task.innerHTML = input.value
                 taskList.appendChild(task)
@@ -156,26 +198,51 @@
             }
         }
 
-        taskList.addEventListener("click", (e)=>{
-            if(e.target.classList.contains('delete-btn')){
+        taskList.addEventListener("click", (e) => {
+            if (e.target.classList.contains('delete-btn')) {
                 e.target.parentNode.remove()
                 saveData()
             }
 
-            else if(e.target.tagName = "li"){
-                    e.target.classList.toggle("checked")
-                    saveData()
+            else if (e.target.tagName = "li") {
+                e.target.classList.toggle("checked")
+                saveData()
             }
         }, false)
 
-        function saveData(){
+        function saveData() {
             localStorage.setItem("data", taskList.innerHTML)
         }
 
-        function showData(){
+        function showData() {
             taskList.innerHTML = localStorage.getItem("data")
         }
         showData();
+
+        function changeTheme() {
+            const body = document.body;
+            const themeButton = document.querySelector('.theme i');
+            var list = document.getElementsByTagName('li');
+            var heading = document.querySelector('.todo-container h1');
+            var toDoContainer = document.querySelector('.todo-container');
+
+            body.classList.toggle('dark');
+
+            for( const li of list){
+                li.classList.toggle('dark')
+            }
+            heading.classList.toggle('dark')
+            toDoContainer.classList.toggle('dark')
+            if (body.classList.contains('dark')) {
+
+                themeButton.classList.remove('fa-moon');
+                themeButton.classList.add('fa-sun');
+            } else {
+                themeButton.classList.remove('fa-sun');
+                themeButton.classList.add('fa-moon');
+
+            }
+        }
 
     </script>
 </body>
